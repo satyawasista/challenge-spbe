@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\blogController;
-use Illuminate\Support\Facades\Route;
 use Whoops\Run;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\blogController;
+use App\Http\Controllers\SSOBrokerController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\PermissionRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +17,28 @@ use Whoops\Run;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('backend/login',[SSOBrokerController::class, 'authenticateToSSO']);
+Route::get('authenticateToSSO',[SSOBrokerController::class, 'authenticateToSSO']);
+Route::get('authData/{authData}',[SSOBrokerController::class, 'authenticateToSSO']);
+Route::get('logout/{sessionId}',[SSOBrokerController::class, 'logout']);
+Route::get('changeRole/{role}', [SSOBrokerController::class, 'changeRole'])->name('changeRole');
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['SSOBrokerMiddleware']], function () {
+    Route::get('/', function(){
+       return view('welcome');
+    });
+ });
+
+ Route::group(['namespace' => 'Admin', 'middleware' => []], function () {
+	Route::get('auth/permission_role',[PermissionRoleController::class,'index'])->name('permission_role.index');
+	Route::post('auth/permission_role',[PermissionRoleController::class,'store'])->name('permission_role.store');
 });
+
+Route::group(['namespace' => 'Admin', 'middleware' => []], function () {
+	Route::get('auth/permission/select',[PermissionController::class,'select'])->name('permission.select');
+	Route::resource('auth/permission', [PermissionController::class]);
+});
+
 
 Route::get('/blog', [blogController::class,'index']);
 

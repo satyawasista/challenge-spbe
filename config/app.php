@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 
+
 return [
 
     /*
@@ -181,6 +182,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        SPBE\NobleUI\Providers\SPBENobleServiceProvider::class,
+
 
         /*
          * Package Service Providers...
@@ -209,6 +212,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Menu' => App\Services\Menu\MenuService::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

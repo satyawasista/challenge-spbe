@@ -23,7 +23,7 @@ class BlogController extends Controller
         if ($data) {
             return ApiFormatter::createApi(200, 'Success',$data);
         }else {
-            return ApiFormatter::createApi(400,'Failed');
+            return ApiFormatter::createApi(500,'Failed');
         }
     }
 
@@ -65,11 +65,11 @@ class BlogController extends Controller
             if ($data) {
                 return ApiFormatter::createApi(200, 'Success',$data);
             }else {
-                return ApiFormatter::createApi(400,'Failed');
+                return ApiFormatter::createApi(500,'Failed');
             }
 
         } catch (Exception $error) {
-            return ApiFormatter::createApi(400,'Failed');
+            return ApiFormatter::createApi(500,'Failed');
         }
     }
 
@@ -81,7 +81,13 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
+        $data= blogs::where('id','=',$id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success',$data);
+            }else {
+                return ApiFormatter::createApi(500,'Failed');
+            }
     }
 
     /**
@@ -104,7 +110,35 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'tile' => 'required',
+                'description'=> 'required',
+                'photo' => 'required',
+                'user_id' => 'required',
+            ]);
+
+            $blog = blogs::findOrFail($id);
+
+            $blog ->update([
+                'title' =>$request->title,
+                'description' =>$request->description,
+                'photo' =>$request->photo,
+                'user_id' =>$request->user_id,
+
+            ]);
+
+            $data= blogs::where('id','=',$blog->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success',$data);
+            }else {
+                return ApiFormatter::createApi(500,'Failed');
+            }
+
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(500,'Failed');
+        }
     }
 
     /**
@@ -115,6 +149,19 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $blog = blogs::FindOrFail($id);
+
+            $data =$$blog->delete();
+    
+                if ($data) {
+                    return ApiFormatter::createApi(200, 'Success Destroy data');
+                }else {
+                    return ApiFormatter::createApi(500,'Failed');
+                }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(500,'Failed');
+        }
+     
     }
 }

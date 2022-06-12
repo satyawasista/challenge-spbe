@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('blogs', [BlogController::class,'index']);
-Route::post('blogs/store', [BlogController::class,'store']);
+Route::post('blog/store', [BlogController::class,'store']);
+Route::get('blogs/show/{id}', [BlogController::class,'show']);
+Route::post('blog/update/{id}', [BlogController::class,'update']);
+Route::get('blogs/destroy{id}', [BlogController::class,'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

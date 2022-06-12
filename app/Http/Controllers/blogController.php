@@ -7,9 +7,17 @@ use App\Models\User;
 use Faker\Extension\PhoneNumberExtension;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\DocBlock\Tags\Uses;
+use App\Services\ServiceBlog;
+use Symfony\Component\HttpFoundation\ServerBag;
 
 class blogController extends Controller
 {
+    protected $ServiceBlog;
+    function __construct(
+        ServiceBlog $ServiceBlog
+    ){
+        $this->ServiceBlog =$ServiceBlog;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +25,8 @@ class blogController extends Controller
      */
     public function index()
     {
-        $blog = blogs:: with('user')-> paginate();
-        return view('blog', compact(['blog']));
+        $blog = blogs::with('User')-> paginate();
+        return view('blog.blog', ['blog'=>$blog]);
     }
 
     /**
@@ -29,7 +37,7 @@ class blogController extends Controller
     public function create()
     {
         $user=User::all();
-        return view('blogcreate');
+        return view('blog.blogcreate');
     }
 
     /**
@@ -70,7 +78,7 @@ class blogController extends Controller
     public function edit($id)
     {
         $blog = blogs::find($id);
-        return view('blogedit',compact(['blog']));
+        return view('blog.blogedit',compact(['blog']));
     }
 
     /**

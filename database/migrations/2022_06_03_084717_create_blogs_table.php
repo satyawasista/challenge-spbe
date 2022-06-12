@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('photo')->nullable();
             $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('tags_id')->nullable();
             $table->timestamps();
         });
     }
